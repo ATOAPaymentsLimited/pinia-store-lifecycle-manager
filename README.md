@@ -18,9 +18,9 @@ A robust Pinia plugin designed to manage store lifecycles seamlessly, including 
 You can install the Pinia Store Lifecycle Manager using npm or Yarn:
 
 ```bash
-npm install pinia-store-lifecycle-manager
+npm install @atoapayments/pinia-store-lifecycle-manager
 # or
-yarn add pinia-store-lifecycle-manager
+yarn add @atoapayments/pinia-store-lifecycle-manager
 ```
 
 ## Usage
