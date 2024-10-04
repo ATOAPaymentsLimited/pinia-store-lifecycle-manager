@@ -1,0 +1,49 @@
+{
+  "name": "pinia-store-lifecycle-manager",
+  "version": "0.0.1",
+  "description": "A Pinia plugin for managing store lifecycle, including state resets and refreshes",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/**/*.ts",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "pinia",
+    "vue",
+    "store",
+    "lifecycle",
+    "management"
+  ],
+  "author": "Tushar gupta",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "eslint": "^9.11.1",
+    "pinia": "^2.2.2",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2",
+    "vue": "^3.5.9"
+  },
+  "peerDependencies": {
+    "pinia": "^2.0.0",
+    "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "pinia": {
+      "optional": false
+    },
+    "vue": {
+      "optional": false
+    }
+  }
+}
