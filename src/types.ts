@@ -1,4 +1,5 @@
 import type { StoreActions, StoreGetters, StoreState } from "pinia";
+import { Ref } from "vue";
 
 /**
  * Represents a map of action parameters for a store.
@@ -83,7 +84,7 @@ export type RefreshFunction<Store> = (
 // Extend Pinia's types to include our custom properties and options
 declare module "pinia" {
   export interface PiniaCustomProperties {
-    _hasStoreLifecycleManagerListener?: boolean;
+    _hasStoreLifecycleManagerListener?: Ref<boolean>;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

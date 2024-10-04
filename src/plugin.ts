@@ -290,9 +290,9 @@ export const PiniaStoreLifecycleManager = (
             )()
         : options.lifecycleOptions.refresh;
 
-    if (refreshResult) {
+    if (refreshResult && typeof refreshResult === "object") {
       const filteredResult = Object.fromEntries(
-        Object.entries(refreshResult || {}).filter(([key, value]) => {
+        Object.entries(refreshResult).filter(([key, value]) => {
           const actionResetOnly =
             (value as { resetOnly?: boolean } | undefined)?.resetOnly ?? false;
           const shouldInclude =
@@ -331,6 +331,10 @@ export const PiniaStoreLifecycleManager = (
           }
         }
       });
+    } else {
+      if (pluginOptions?.enableDebugLogs) {
+        debugLog(store.$id, "Refresh action skipped: Invalid refresh result");
+      }
     }
 
     if (pluginOptions?.enableDebugLogs) {
