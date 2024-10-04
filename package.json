@@ -1,5 +1,5 @@
 {
-  "name": "pinia-store-lifecycle-manager",
+  "name": "@atoapayments/pinia-store-lifecycle-manager",
   "version": "0.0.1",
   "description": "A Pinia plugin for managing store lifecycle, including state resets and refreshes",
   "type": "module",
