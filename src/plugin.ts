@@ -280,7 +280,7 @@ export const PiniaStoreLifecycleManager = (
       return;
     }
 
-    const refreshResult: RefreshOptions<Store> | undefined =
+    const refreshResult: RefreshOptions<Store> | void | undefined =
       typeof options.lifecycleOptions.refresh === "function"
         ? options.lifecycleOptions.refresh.length > 0
           ? options.lifecycleOptions.refresh(store)
