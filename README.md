@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="https://www.npmjs.org/package/@atoapayments/pinia-store-lifecycle-manager"><img src="https://img.shields.io/npm/v/@atoapayments/pinia-store-lifecycle-manager.svg" alt="npm"></a>
+  <a href="https://unpkg.com/mitt/dist/mitt.js"><img src="https://img.badgesize.io/https://unpkg.com/@atoapayments/pinia-store-lifecycle-manager/dist/index.js?compression=gzip" alt="gzip size"></a>
+</p>
+
 # Pinia Store Lifecycle Manager
 
 A robust Pinia plugin designed to manage store lifecycles seamlessly, including state resets and refreshes. Enhance your Vue applications with streamlined state management tailored for dynamic development needs.
