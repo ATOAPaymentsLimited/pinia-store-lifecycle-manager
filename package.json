@@ -1,7 +1,16 @@
 {
   "name": "@atoapayments/pinia-store-lifecycle-manager",
-  "version": "0.0.1",
+  "version": "0.0.1+1",
   "description": "A Pinia plugin for managing store lifecycle, including state resets and refreshes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager.git"
+  },
+  "homepage": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager#readme",
+  "bugs": {
+    "url": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager/issues",
+    "email": "vamsi@paywithatoa.co.uk"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,11 +18,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "build": "tsup src/index.ts --format cjs,esm --minify --treeshake --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "lint": "eslint src/**/*.ts",
     "clean": "rm -rf dist",
-    "prepublishOnly": "npm run clean && npm run build"
+    "gzipper": "gzipper compress ./dist --include cjs,cts,js,ts,d.ts",
+    "prepublishOnly": "npm run clean && npm run build && npm run gzipper"
   },
   "keywords": [
     "pinia",
@@ -29,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "eslint": "^9.11.1",
+    "gzipper": "^7.2.0",
     "pinia": "^2.2.2",
     "tsup": "^8.3.0",
     "typescript": "^5.6.2",
