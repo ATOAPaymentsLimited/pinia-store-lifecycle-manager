@@ -1,7 +1,16 @@
 {
   "name": "@atoapayments/pinia-store-lifecycle-manager",
-  "version": "0.0.1",
+  "version": "0.0.1+1",
   "description": "A Pinia plugin for managing store lifecycle, including state resets and refreshes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager.git"
+  },
+  "homepage": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager#readme",
+  "bugs": {
+    "url": "https://github.com/ATOAPaymentsLimited/pinia-store-lifecycle-manager/issues",
+    "email": "vamsi@paywithatoa.co.uk"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
