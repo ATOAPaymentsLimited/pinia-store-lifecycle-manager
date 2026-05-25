@@ -1,11 +1,15 @@
 import { createPinia, defineStore, setActivePinia } from 'pinia'
-import { ref } from 'vue'
+import { createApp, ref } from 'vue'
 
 /**
  * Call this in beforeEach to get a clean Pinia instance per test.
+ * Creates a minimal Vue app and installs pinia so that plugins registered
+ * via pinia.use() are immediately active (required by Pinia v3).
  */
 export function setupPinia() {
   const pinia = createPinia()
+  const app = createApp({})
+  app.use(pinia)
   setActivePinia(pinia)
   return pinia
 }

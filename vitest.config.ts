@@ -3,6 +3,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     environment: 'happy-dom',
+    globals: true,
     typecheck: {
       enabled: true,
       include: ['tests/types/**/*.test-d.ts'],
