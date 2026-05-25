@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: "Test (Node ${{ matrix.node-version }} × Pinia ${{ matrix.pinia-version }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20]
+        pinia-version: ['2', '3']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Override Pinia version for Pinia 2 matrix leg
+        if: matrix.pinia-version == '2'
+        run: npm install pinia@^2.2.2 --no-save
+
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run test:coverage
+      - run: npm run build
+
+  verify-package:
+    name: Verify package contents
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Verify only dist/ is in the tarball
+        run: npm pack --dry-run 2>&1 | grep -v "^npm"

@@ -5,7 +5,7 @@ name: Publish to npm
 
 on:
   push:
-    branches: [main]
+    tags: ['v*']
 
 jobs:
   build:
