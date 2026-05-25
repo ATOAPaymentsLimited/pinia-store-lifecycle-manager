@@ -81,7 +81,7 @@ export const PiniaStoreLifecycleManager = (
   }
 
   if (
-    !store.$state.hasOwnProperty("hasStoreLifecycleManagerListener") &&
+    !store.$state.hasOwnProperty("_hasStoreLifecycleManagerListener") &&
     ((!pluginOptions?.disableAutoRegister &&
       options.lifecycleOptions?.disableListener !== true) ||
       (pluginOptions?.disableAutoRegister &&
@@ -119,7 +119,7 @@ export const PiniaStoreLifecycleManager = (
         store.$id,
         "Skipping PiniaStoreLifecycleManager listener attachment",
         {
-          reason: store.$state.hasStoreLifecycleManagerListener
+          reason: store.$state._hasStoreLifecycleManagerListener
             ? "Already attached"
             : "Disabled by configuration",
         }
