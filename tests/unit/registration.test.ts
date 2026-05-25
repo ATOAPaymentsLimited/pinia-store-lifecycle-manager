@@ -189,11 +189,22 @@ describe('PiniaStoreLifecycleManager — Listener Registration', () => {
   })
 
   describe('when running in an SSR environment', () => {
+    let savedWindow: any
+    let savedDocument: any
+
+    beforeEach(() => {
+      savedWindow = (globalThis as any).window
+      savedDocument = (globalThis as any).document
+    })
+
+    afterEach(() => {
+      ;(globalThis as any).window = savedWindow
+      ;(globalThis as any).document = savedDocument
+    })
+
     describe('when window is undefined and document is undefined', () => {
       describe('when enableSSR is false (default)', () => {
         it('skips listener registration entirely', () => {
-          const originalWindow = (globalThis as any).window
-          const originalDocument = (globalThis as any).document
           delete (globalThis as any).window
           delete (globalThis as any).document
 
@@ -201,28 +212,20 @@ describe('PiniaStoreLifecycleManager — Listener Registration', () => {
           pinia.use((ctx) => PiniaStoreLifecycleManager(ctx, handler))
           useUserStore()
           expect(handler).not.toHaveBeenCalled()
-
-          ;(globalThis as any).window = originalWindow
-          ;(globalThis as any).document = originalDocument
         })
 
         it('does not invoke the lifecycleEventHandler', () => {
-          const originalWindow = (globalThis as any).window
           delete (globalThis as any).window
 
           const handler = vi.fn()
           pinia.use((ctx) => PiniaStoreLifecycleManager(ctx, handler))
           useUserStore()
           expect(handler).not.toHaveBeenCalled()
-
-          ;(globalThis as any).window = originalWindow
         })
       })
 
       describe('when enableSSR is true', () => {
         it('registers the lifecycle listener on the server', () => {
-          const originalWindow = (globalThis as any).window
-          const originalDocument = (globalThis as any).document
           delete (globalThis as any).window
           delete (globalThis as any).document
 
@@ -232,24 +235,18 @@ describe('PiniaStoreLifecycleManager — Listener Registration', () => {
           )
           useUserStore()
           expect(handler).toHaveBeenCalledOnce()
-
-          ;(globalThis as any).window = originalWindow
-          ;(globalThis as any).document = originalDocument
         })
       })
     })
 
     describe('when window exists but document is undefined', () => {
       it('treats the environment as SSR and skips registration', () => {
-        const originalDocument = (globalThis as any).document
         delete (globalThis as any).document
 
         const handler = vi.fn()
         pinia.use((ctx) => PiniaStoreLifecycleManager(ctx, handler))
         useUserStore()
         expect(handler).not.toHaveBeenCalled()
-
-        ;(globalThis as any).document = originalDocument
       })
     })
 
@@ -273,7 +270,7 @@ describe('PiniaStoreLifecycleManager — Listener Registration', () => {
       )
       useUserStore()
       const allArgs = spy.mock.calls.flat().join(' ')
-      expect(allArgs).toContain('user')
+      expect(allArgs).toContain('[user]')
     })
 
     it("logs skip reason 'Already attached' when duplicate registration is attempted", () => {
@@ -303,21 +300,23 @@ describe('PiniaStoreLifecycleManager — Listener Registration', () => {
     })
 
     it('logs SSR skip message', () => {
-      const originalWindow = (globalThis as any).window
-      const originalDocument = (globalThis as any).document
-      delete (globalThis as any).window
-      delete (globalThis as any).document
+      const savedWindow = (globalThis as any).window
+      const savedDocument = (globalThis as any).document
+      try {
+        delete (globalThis as any).window
+        delete (globalThis as any).document
 
-      const spy = vi.spyOn(console, 'log').mockImplementation(() => {})
-      pinia.use((ctx) =>
-        PiniaStoreLifecycleManager(ctx, () => {}, { enableDebugLogs: true })
-      )
-      useUserStore()
-      const allArgs = spy.mock.calls.flat().join(' ')
-      expect(allArgs).toContain('not running on the client side')
-
-      ;(globalThis as any).window = originalWindow
-      ;(globalThis as any).document = originalDocument
+        const spy = vi.spyOn(console, 'log').mockImplementation(() => {})
+        pinia.use((ctx) =>
+          PiniaStoreLifecycleManager(ctx, () => {}, { enableDebugLogs: true })
+        )
+        useUserStore()
+        const allArgs = spy.mock.calls.flat().join(' ')
+        expect(allArgs).toContain('not running on the client side')
+      } finally {
+        ;(globalThis as any).window = savedWindow
+        ;(globalThis as any).document = savedDocument
+      }
     })
   })
 })
