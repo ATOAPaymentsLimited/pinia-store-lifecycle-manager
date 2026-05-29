@@ -8,10 +8,12 @@ export default defineConfig({
       enabled: true,
       include: ['tests/types/**/*.test-d.ts'],
     },
+    reporters: process.env.GITHUB_ACTIONS ? ['verbose', 'github-actions'] : ['verbose'],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
-      exclude: ['src/index.ts'],
+      exclude: ['src/index.ts', 'src/types.ts'],
+      reporter: ['text', 'lcov', 'html', 'json-summary'],
       thresholds: {
         lines: 100,
         branches: 100,

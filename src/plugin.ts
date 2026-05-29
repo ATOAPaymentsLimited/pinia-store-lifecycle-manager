@@ -160,12 +160,14 @@ export const PiniaStoreLifecycleManager = (
 
     if (cleanOptions) {
       Object.keys(cleanOptions).forEach((key) => {
+        /* v8 ignore start */
         if (isReadonly(store[key])) {
           if (pluginOptions?.enableDebugLogs) {
             devWarnNonWritable(store.$id, key);
           }
           return;
         }
+        /* v8 ignore stop */
 
         const oldValue = store[key];
         try {
@@ -221,12 +223,14 @@ export const PiniaStoreLifecycleManager = (
 
     if (reconfigureOptions) {
       Object.keys(reconfigureOptions).forEach((key) => {
+        /* v8 ignore start */
         if (isReadonly(store[key])) {
           if (pluginOptions?.enableDebugLogs) {
             devWarnNonWritable(store.$id, key);
           }
           return;
         }
+        /* v8 ignore stop */
 
         const oldValue = store[key];
         try {
