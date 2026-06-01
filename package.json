@@ -1,6 +1,6 @@
 {
   "name": "@atoapayments/pinia-store-lifecycle-manager",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A Pinia plugin for managing store lifecycle, including state resets and refreshes",
   "repository": {
     "type": "git",
@@ -23,7 +23,11 @@
     "lint": "eslint src/**/*.ts",
     "clean": "rm -rf dist",
     "gzipper": "gzipper compress ./dist --include cjs,cts,js,ts,d.ts",
-    "prepublishOnly": "npm run clean && npm run build && npm run gzipper"
+    "prepublishOnly": "npm run clean && npm run build && npm run gzipper",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:types": "vitest --typecheck"
   },
   "keywords": [
     "pinia",
@@ -38,15 +42,18 @@
     "@types/node": "^22.7.4",
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "eslint": "^9.11.1",
     "gzipper": "^7.2.0",
-    "pinia": "^2.2.2",
+    "happy-dom": "^15.0.0",
+    "pinia": "^3.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.6.2",
+    "vitest": "^2.0.0",
     "vue": "^3.5.9"
   },
   "peerDependencies": {
-    "pinia": "^2.0.0",
+    "pinia": "^2.0.0 || ^3.0.0",
     "vue": "^3.0.0"
   },
   "peerDependenciesMeta": {

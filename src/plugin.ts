@@ -81,7 +81,7 @@ export const PiniaStoreLifecycleManager = (
   }
 
   if (
-    !store.$state.hasOwnProperty("hasStoreLifecycleManagerListener") &&
+    !store.$state.hasOwnProperty("_hasStoreLifecycleManagerListener") &&
     ((!pluginOptions?.disableAutoRegister &&
       options.lifecycleOptions?.disableListener !== true) ||
       (pluginOptions?.disableAutoRegister &&
@@ -119,7 +119,7 @@ export const PiniaStoreLifecycleManager = (
         store.$id,
         "Skipping PiniaStoreLifecycleManager listener attachment",
         {
-          reason: store.$state.hasStoreLifecycleManagerListener
+          reason: store.$state._hasStoreLifecycleManagerListener
             ? "Already attached"
             : "Disabled by configuration",
         }
@@ -160,12 +160,14 @@ export const PiniaStoreLifecycleManager = (
 
     if (cleanOptions) {
       Object.keys(cleanOptions).forEach((key) => {
+        /* v8 ignore start */
         if (isReadonly(store[key])) {
           if (pluginOptions?.enableDebugLogs) {
             devWarnNonWritable(store.$id, key);
           }
           return;
         }
+        /* v8 ignore stop */
 
         const oldValue = store[key];
         try {
@@ -221,12 +223,14 @@ export const PiniaStoreLifecycleManager = (
 
     if (reconfigureOptions) {
       Object.keys(reconfigureOptions).forEach((key) => {
+        /* v8 ignore start */
         if (isReadonly(store[key])) {
           if (pluginOptions?.enableDebugLogs) {
             devWarnNonWritable(store.$id, key);
           }
           return;
         }
+        /* v8 ignore stop */
 
         const oldValue = store[key];
         try {

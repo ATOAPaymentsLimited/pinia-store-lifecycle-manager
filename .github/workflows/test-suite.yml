@@ -1,0 +1,120 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same branch/PR when a new commit is pushed
+concurrency:
+  group: test-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Fast feedback: lint + type check (~30s) ──────────────────────────────
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: TypeScript type check (src)
+        run: npx tsc --noEmit
+
+  # ─── Test matrix: Node 20/22 × Pinia 2/3 ─────────────────────────────────
+  test:
+    name: "Test · Node ${{ matrix.node-version }} · Pinia ${{ matrix.pinia-version }}"
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+        pinia-version: ['2', '3']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Pin Pinia v2 (compatibility leg)
+        if: matrix.pinia-version == '2'
+        run: npm install pinia@^2.2.2 --no-save
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      # Upload HTML report + post summary only from the canonical leg (Node 20 / Pinia 3)
+      - name: Upload coverage report
+        if: matrix.node-version == 20 && matrix.pinia-version == '3'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      - name: Post coverage summary to workflow run
+        if: matrix.node-version == 20 && matrix.pinia-version == '3'
+        run: |
+          node --input-type=commonjs -e "
+            const fs = require('fs');
+            const s = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8')).total;
+            const row = (label, d) => '| ' + label + ' | ' + d.covered + ' / ' + d.total + ' | ' + d.pct + '% |';
+            const lines = [
+              '## Coverage Report', '',
+              '| Category | Covered | % |',
+              '|----------|---------|---|',
+              row('Statements', s.statements),
+              row('Branches',   s.branches),
+              row('Functions',  s.functions),
+              row('Lines',      s.lines),
+            ];
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n') + '\n');
+          "
+
+  # ─── Build + package verification ─────────────────────────────────────────
+  build-and-verify:
+    name: Build & Verify Package
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (CJS + ESM + types)
+        run: npm run build
+
+      - name: Verify dist/ contents in tarball
+        run: npm pack --dry-run 2>&1 | grep -v "^npm"
